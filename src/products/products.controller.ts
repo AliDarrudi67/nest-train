@@ -9,6 +9,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { I18n, I18nContext } from 'nestjs-i18n';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 import userGuard from 'src/users/dto/userGuards';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -28,7 +29,8 @@ export class ProductsController {
   }
 
   @Get()
-  findAll() {
+  findAll(@I18n() i18n: I18nContext) {
+    return { message: i18n.t('tr.hello', { args: { name: 'ali' } }) };
     return this.productsService.findAll();
   }
 
