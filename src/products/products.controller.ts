@@ -9,19 +9,39 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { JwtAuthGuard } from 'src/jwt-auth/jwt-auth.guard';
 import userGuard from 'src/users/dto/userGuards';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ProductForbiddenResponse } from './dto/forbiddenDto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './products.service';
 
 @Controller('products')
+@ApiTags('Products')
+@ApiBearerAuth()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post('create')
   @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+    type: ProductForbiddenResponse,
+  })
+  @ApiResponse({ status: 201, description: 'Created', type: CreateProductDto })
+  @ApiHeader({
+    name: 'Lang',
+    description: 'send your lang',
+  })
   create(@Body() createProductDto: CreateProductDto, @Request() request) {
     const user: userGuard = request.user;
     createProductDto.user = user;
@@ -35,6 +55,10 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @ApiParam({
+    name: 'id',
+    description: 'id of product',
+  })
   findOne(@Param('id') id: number) {
     return this.productsService.findOne(id);
   }

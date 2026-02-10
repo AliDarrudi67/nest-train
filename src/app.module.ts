@@ -8,7 +8,7 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import * as path from 'path';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -16,6 +16,7 @@ import Users from './entities/user.entity';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
+
 @Module({
   imports: [
     UsersModule,
@@ -23,7 +24,7 @@ import { UsersModule } from './users/users.module';
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
-        path: path.join(__dirname, '/i18n/'),
+        path: join(process.cwd(), 'src/i18n/'),
         watch: true,
       },
       resolvers: [
