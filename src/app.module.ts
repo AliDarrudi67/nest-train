@@ -1,6 +1,7 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   AcceptLanguageResolver,
@@ -8,7 +9,7 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { join } from 'path';
+import path, { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -65,6 +66,9 @@ import { UsersModule } from './users/users.module';
           strict: false,
         },
       },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(process.cwd(), 'static'),
     }),
   ],
   controllers: [AppController],
